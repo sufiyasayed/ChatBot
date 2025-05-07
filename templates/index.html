@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Chatbot Demo</title>
+    <style>
+        body {
+            background-image: url('templates\images\bg.png');
+            background-size: cover;
+            background-repeat: no-repeat;
+            margin: 0;
+            padding: 0;
+        }
+        .chat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #007bff;
+            padding: 10px 20px;
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+        }
+        .header-title {
+            color: #fff;
+            font-size: 18px;
+        }
+        .refresh-button {
+            cursor: pointer;
+            font-size: 25px;
+            margin-right:15px;
+        }
+        .close-button {
+            cursor: pointer;
+            font-size: 35px;
+        }
+        .refresh-button:hover, .close-button:hover {
+            color: #007bff;
+            margin-right: 10px;
+        }
+        .chat-icon {
+            width: 70px;
+            height: 70px;
+            position: fixed;
+            bottom: 50px;
+            right: 50px;
+            cursor: pointer;
+            transition: all 0.5s;
+            z-index: 9999;
+        }
+        .chat-icon img {
+            width: 100%;
+            height: 100%;
+        }
+        .chat-icon:hover {
+            width: 70px;
+            height: 70px;
+        }
+        .chat-box {
+            display: none;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: flex-start;
+            width: 400px;
+            height: 500px;
+            position: fixed;
+            bottom: 40px;
+            right: 40px;
+            padding: 5px;
+            border: 1px solid #ccc;
+            box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+            font-family: Arial, sans-serif;
+        }
+        .user-message {
+            text-align: right;
+            margin-bottom: 5px;
+            background-color: #c0c2c4;
+            color: Black;
+            padding: 10px;
+            border-radius: 15px;
+            margin: 5px 0;
+            display: block;
+            word-wrap: break-word;
+            align-self: flex-end;
+        }
+        .bot-message {
+            text-align: left;
+            margin-bottom: 5px;
+            background-color: #007bff;
+            color: white;
+            padding: 10px 10px 10px 10px;
+            border-radius: 15px;
+            margin: 5px 0;
+            display: block;
+            word-wrap: break-word;
+            align-self: flex-start;
+        }
+        .chat-messages-container {
+            flex: 1;
+            max-height: calc(100% - 105px);
+            overflow-y: auto;
+            border-radius: 10px;
+            background-color: #fff;
+            padding: 0px;
+            margin-bottom: 50px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        .user-input-container {
+            display: flex;
+            align-items: center;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 95%;
+            padding: 5px;
+            background-color: #fff;
+        }
+        #voice-button {
+            width: 30px;
+            height: 30px;
+            cursor: pointer;
+            position: absolute;
+            left: 5px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+        #user-input {
+            flex: 1;
+            height: 40px;
+            border-radius: 15px;
+            padding-right: 50px;
+            outline: strong;
+            background: transparent;
+            padding-left: 30px;
+        }
+        #send-img {
+            width: 30px;
+            height: 30px;
+            cursor: pointer;
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+        .button-container {
+            display: flex;
+            align-items: center; 
+        }
+    </style>
+</head>
+<body>
+    <div class="chat-icon" id="chat-icon">
+        <img src="https://img.icons8.com/stickers/100/chatbot.png" alt="Chat Icon">
+    </div>
+    <div class="chat-box" id="chat-box">
+        <div class="chat-header">
+            <span class="header-title">SVEC</span>
+            <div class="button-container">
+                <span class="refresh-button">&#8634;</span>
+                <span class="close-button" id="close-btn">&times;</span>
+            </div>
+        </div>
+        <div id="chat-messages" class="chat-messages-container"></div>
+        <div class="user-input-container">
+            <img src="https://cdn-icons-png.flaticon.com/512/60/60955.png" id="voice-button" alt="Microphone">
+            <input type="text" id="user-input" placeholder="Speak or type your message..." style="flex: 1; height: 40px; border-radius: 15px; padding-right: 50px; outline: strong; background: transparent;">
+            <img src="https://cdn-icons-png.flaticon.com/128/9217/9217990.png" id="send-img" alt="Send" style="width: 30px; height: 30px; cursor: pointer;">
+        </div>
+    </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            appendBotMessage("Welcome to Sri Vasavi Engineering college. I'm Chat assistant. How can I assist you?");
+        });
+
+        const chatIcon = document.querySelector(".chat-icon");
+        const chatBox = document.querySelector(".chat-box");
+        const userInputElement = document.getElementById("user-input");
+        const sendImageElement = document.getElementById("send-img");
+        const chatMessagesContainer = document.getElementById("chat-messages");
+        const closeBtn = document.getElementById("close-btn");
+        const refreshButton = document.querySelector(".refresh-button");
+        const voiceButton = document.getElementById("voice-button");
+
+        chatIcon.addEventListener("click", function () {
+            chatBox.style.display = "block";
+            chatIcon.style.display = "none";
+        });
+
+        closeBtn.addEventListener("click", function () {
+            chatBox.style.display = "none";
+            chatIcon.style.display = "block";
+        });
+
+        refreshButton.addEventListener("click", function () {
+            chatMessagesContainer.innerHTML = "";
+
+            appendBotMessage("Welcome to Sri Vasavi Engineering college. I'm Chat assistant. How can I assist you?");
+
+            chatBox.style.display = "block";
+            chatIcon.style.display = "none";
+        });
+
+        userInputElement.addEventListener("keydown", function (event) {
+            if (event.key === "Enter") {
+                event.preventDefault();
+                sendMessage();
+            }
+        });
+
+        sendImageElement.addEventListener("click", sendMessage);
+
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        const recognition = new SpeechRecognition();
+        recognition.lang = 'en-US';
+
+        recognition.onstart = function () {
+            console.log("Voice recognition started");
+        };
+
+        recognition.onresult = function (event) {
+            const result = event.results[event.resultIndex][0].transcript;
+            userInputElement.value += ' ' + result; // Append the recognized speech
+        };
+
+        recognition.onspeechend = function () {
+            recognition.stop();
+        };
+
+        recognition.onerror = function (event) {
+            console.error("Speech recognition error:", event.error);
+            recognition.stop();
+        };
+
+        voiceButton.addEventListener("click", function () {
+            recognition.start();
+        });
+
+        function sendMessage() {
+            const userInput = userInputElement.value;
+            if (userInput.trim() !== "") {
+                appendUserMessage(userInput);
+                userInputElement.value = "";
+
+               
+                fetch('/get_response', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        input: userInput
+                    })
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        appendBotMessage(data.response);
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                    });
+            }
+        }
+
+        function appendUserMessage(message) {
+            const userMessageElement = document.createElement("div");
+            userMessageElement.className = "user-message";
+            userMessageElement.textContent = message;
+            chatMessagesContainer.appendChild(userMessageElement);
+            chatMessagesContainer.scrollTop = chatMessagesContainer.scrollHeight;
+        }
+
+        function appendBotMessage(message) {
+            const botMessageElement = document.createElement("div");
+            botMessageElement.className = "bot-message";
+            botMessageElement.textContent = message;
+            chatMessagesContainer.appendChild(botMessageElement);
+            chatMessagesContainer.scrollTop = chatMessagesContainer.scrollHeight;
+        }
+    </script>
+</body>
+</html>

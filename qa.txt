@@ -1,0 +1,7 @@
+What is your name?|My name is ChatBot.
+hi hey hello?| Hey there how can i assist you.
+How are you?|I'm just a computer program, so I don't have feelings, but I'm here to help you!
+What can you do?|I can answer questions and assist with various tasks.
+What is your principal name?|Dr. Guduru VNSR Ratnakara Rao.
+where are you from?|I don't have any physical location.
+Were is sri vasavi Engineering college located|Pedatadepalli,Tadepalligudem
